@@ -5,8 +5,8 @@ require('dotenv').config();
 
 const app = express().use(body_parser.json());
 
-const token = "EAARnOK2w6woBOwqxrD2kVSnSWOjCOWqOdNo8cq1HzwouDPgwS4ixoe4glEcfzlZAg9Nmpn83RHzE5ugHxDBxtwxGrZACCCPbimDRargZA9AOsnBd99OYpkM4V3nZBWUQgJkjnjPZC12F8BbGZAPvFcSsxceSVJMiCGWCKpPwEZCSYbIy9pmPNQ4ZAJzXNRZCO5o6m4boIMHTje8Laep4J6ZCdOsOTxvUoZD";
-const mytoken = "anyaaforger";
+const WHATSAPP_TOKEN = "EAARnOK2w6woBOwqxrD2kVSnSWOjCOWqOdNo8cq1HzwouDPgwS4ixoe4glEcfzlZAg9Nmpn83RHzE5ugHxDBxtwxGrZACCCPbimDRargZA9AOsnBd99OYpkM4V3nZBWUQgJkjnjPZC12F8BbGZAPvFcSsxceSVJMiCGWCKpPwEZCSYbIy9pmPNQ4ZAJzXNRZCO5o6m4boIMHTje8Laep4J6ZCdOsOTxvUoZD";
+const VERIFY_TOKEN = "anyaaforger";
 
 app.listen(5000 || process.env.PORT, () =>{
     console.log("Jalannn...");
@@ -18,12 +18,14 @@ app.get("/webhook", (req,res)=>{
     let token = req.query["hub.verify_token"];
 
     console.log(challenge);
-
+    
     if(mode && token){
-        if(mode === "subscribe" && token === mytoken){
+        if(mode === "subscribe" && token === VERIFY_TOKEN){
             res.status(200).send(challenge);
+            console.log("Webhook Verified");
         }else{
             res.status(403);
+            console.log("Webhook not Verified");
         }
     }
 });
@@ -42,7 +44,7 @@ app.post("/webhook", (req, res)=>{
 
                 axios({
                     method:"POST",
-                    url:"https://graph.facebook.com/v17.0/" + phone_no_id + "/messages?access_token=" + token,
+                    url:"https://graph.facebook.com/v17.0/" + phone_no_id + "/messages?access_token=" + WHATSAPP_TOKEN,
                     data:{
                         messaging_product:"whatsapp",
                         to: from,
